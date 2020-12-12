@@ -14,6 +14,9 @@ def SetCyclesSetting(scene):
     scene.cycles.device = 'CPU' #or 'GPU'
     scene.cycles.samples = 1
     scene.cycles.max_bounces = 1
+    for vl in scene.view_layers:
+        vl.use_pass_uv = True
+
 
 #Get PreMeked Materials
 def OverRideMaterials(scene):
@@ -35,31 +38,79 @@ def addAOV(scene, name):
     bpy.ops.cycles.add_aov()
     vl.cycles.aovs[-1].name = name  
 
+
+def getAllNodes(NodeTree):
+    result = []
+    if  hasattr(NodeTree, 'nodes'):
+        for n in NodeTree.nodes:
+            if n.type == 'GROUP':
+                result += getAllNodes(n.node_tree)
+            else:
+                if(n.name !="Group Input") and (n.name !="Group Output"):
+                    result.append(n)
+    return result
+
 def SetAOVfromMaterials(scene):
+    nodes = []
     for m in bpy.data.materials:
-        if  hasattr(m.node_tree, 'nodes'):
-            for n in m.node_tree.nodes:
-                if(n.type == "OUTPUT_AOV"):
-                    addAOV(scene, n.name)
+        nodes += getAllNodes(m.node_tree)
+
+    for n in nodes:
+        if(n.type == "OUTPUT_AOV"):
+            addAOV(scene, n.name)
+
+
+def CreateAndLinkScene(context, NameExt):
+    scene = context.scene
+    Name = scene.name +".Link.Line"
+    
+    if(NameExt in scene.name):
+        return None
+    #Create Scene
+    if (Name) in bpy.data.scenes:
+        #Re-Link Objects
+        #Link Collections
+        for c in scene.collection.children:
+            if not c.name in bpy.data.scenes[Name].collection.children:
+                bpy.data.scenes[Name].collection.children.link(c)
+        #Link Top Level Objects
+        for o in scene.collection.objects:
+            if not o.name in bpy.data.scenes[Name].collection.objects:
+                bpy.data.scenes[Name].collection.objects.link(o)
+    else:
+        bpy.ops.scene.new(type='LINK_COPY')
+        newScene = context.window.scene
+        newScene.name = Name
+        
+    bpy.data.scenes[Name].camera = scene.camera
+    return bpy.data.scenes[Name]
 
 def start_main(context):
+    preScene = context.window.scene 
     for s in bpy.data.scenes:
-        SetCyclesSetting(s)
-        OverRideMaterials(s)
-        SetAOVfromMaterials(s)
-        s.use_nodes = True
+        context.window.scene = s
+        newScene = CreateAndLinkScene(context, ".Link.Line")
+        if newScene != None:
+            context.window.scene = newScene
+            SetCyclesSetting(newScene)
+            OverRideMaterials(newScene)
+            SetAOVfromMaterials(newScene)
+            newScene.use_nodes = True
+    context.window.scene = preScene
+    #render Image
+    #bpy.ops.render.render()
+    #render Animation
+    #bpy.ops.render.render(animation=True)
+    
 
+
+"""
     lapNode = bpy.data.scenes[0].node_tree.nodes.new(type='CompositorNodeFilter')
     lapNode.filter_type = 'LAPLACE'
     mathNode = bpy.data.scenes[0].node_tree.nodes.new(type='CompositorNodeMath')
     mathNode.operation = 'LESS_THAN'
     mathNode.inputs['Value'].default_value = .001
-
-    #render Image
-    bpy.ops.render.render()
-
-    #render Animation
-    #bpy.ops.render.render(animation=True)
+"""
 
 classes = []
 ####################################################

@@ -59,17 +59,17 @@ class MYADDON_PT_joystick(bpy.types.Panel):
 classes.append(MYADDON_PT_joystick)
 #---------------------------------------------------
 
-#ジョイスティック
+#コンポジットセットアップ
 class MYADDON_PT_LineSetup(bpy.types.Panel):
-    bl_space_type  = 'VIEW_3D'        #どのビューに表示するか
+    bl_space_type  = 'NODE_EDITOR'        #どのビューに表示するか
     bl_region_type = 'UI'             #ビュー内のどこに入れるか。UIは右のサイドバーのとこ
     bl_category    = AddonDisplayName #どのパネルカテゴリに所属するか。ツールパネルのタブに表示される名前。
     bl_label       = "Setup"          #パネル内のグループのタイトル。
 
     def draw(self, context):    #パネルレイアウトをここに記述する
         layout = self.layout
-        layout.label(text="輪郭線用コンポジット")
-        layout.operator("myaddon.linecompositesetup", text = "Run")    #ボタン追加。textはボタンテキスト
+        layout.label(text="輪郭線コンポジット")
+        layout.operator("myaddon.linecompositesetup", text = "SetUp")    #ボタン追加。textはボタンテキスト
 
 classes.append(MYADDON_PT_LineSetup)
 #---------------------------------------------------
