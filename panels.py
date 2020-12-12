@@ -3,6 +3,8 @@ from bpy.props import *
 from . import operators
 from . import operator_joystick
 from . import operator_image
+from . import operator_LineCompositeSetup
+
 
 #パネル追加手順
 # 1. Panel Classを追加。命名規則は "大文字_PT_xxxx"
@@ -55,6 +57,21 @@ class MYADDON_PT_joystick(bpy.types.Panel):
             butttonTxt = '開始'
         layout.operator("myaddon.joystick2camera", text = butttonTxt)    #ボタン追加。textはボタンテキスト
 classes.append(MYADDON_PT_joystick)
+#---------------------------------------------------
+
+#ジョイスティック
+class MYADDON_PT_LineSetup(bpy.types.Panel):
+    bl_space_type  = 'VIEW_3D'        #どのビューに表示するか
+    bl_region_type = 'UI'             #ビュー内のどこに入れるか。UIは右のサイドバーのとこ
+    bl_category    = AddonDisplayName #どのパネルカテゴリに所属するか。ツールパネルのタブに表示される名前。
+    bl_label       = "Setup"          #パネル内のグループのタイトル。
+
+    def draw(self, context):    #パネルレイアウトをここに記述する
+        layout = self.layout
+        layout.label(text="輪郭線用コンポジット")
+        layout.operator("myaddon.linecompositesetup", text = "Run")    #ボタン追加。textはボタンテキスト
+
+classes.append(MYADDON_PT_LineSetup)
 #---------------------------------------------------
 
 

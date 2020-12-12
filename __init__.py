@@ -14,8 +14,11 @@ from . import panels
 from . import operators
 from . import operator_joystick
 from . import operator_image
+from . import operator_LineCompositeSetup
+
 
 def register():
+    operator_LineCompositeSetup.register()
     operator_joystick.register()
     operator_image.register()
     operators.register()
@@ -23,6 +26,7 @@ def register():
     panels.register()
     
 def unregister():
+    operator_LineCompositeSetup.unregister()
     operator_joystick.unregister()    
     operator_image.unregister()
     operators.unregister()

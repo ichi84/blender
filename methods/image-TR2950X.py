@@ -47,7 +47,6 @@ def FillColor(context, color=(1.0, 1.0, 1.0, 1.0) ):
 
 
 def RGB2Gray(img):
-    destImg = img.copy() 
     gray_fac = (0.2126, 0.7152, 0.0722, 0.0)
     return np.einsum('ijk,k->ij',img, gray_fac, optimize='greedy') 
 
