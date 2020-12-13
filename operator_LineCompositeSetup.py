@@ -36,7 +36,7 @@ def LinkNodeSameSockets(scene, fromNode, toNode):
             if o.name == i.name:
                 scene.node_tree.links.new(fromNode.outputs[o.name], toNode.inputs[i.name])
 
-def CreateFileSaveAllPasses():
+def CreateFileSaveAllPasses(scene, context):
     output_path = context.preferences.filepaths.render_output_directory
     node = scene.node_tree.nodes.new('CompositorNodeOutputFile')
 
