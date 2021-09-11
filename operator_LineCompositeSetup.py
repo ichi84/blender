@@ -73,7 +73,7 @@ def AddCompositeNode(scene, context):
         for l in scene.node_tree.links:
             if l.to_node.type == 'COMPOSITE':
                 lastSocket = l.from_socket
-        scene.node_tree.links.new(lastSocket, node2.inputs[2])
+                scene.node_tree.links.new(lastSocket, node2.inputs[2])
 
         node3 = None
         for n in scene.node_tree.nodes:
@@ -102,11 +102,11 @@ def addUVMap():
 
 def addAOV(scene, name):
     for vl in scene.view_layers:
-        for aov in vl.cycles.aovs:
+        for aov in vl.aovs:
             if(aov.name == name):
                 return        
-    bpy.ops.cycles.add_aov()
-    vl.cycles.aovs[-1].name = name  
+    bpy.ops.scene.view_layer_add_aov()
+    vl.aovs[-1].name = name  
 
 def getAllNodes(NodeTree):
     result = []

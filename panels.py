@@ -59,6 +59,24 @@ class MYADDON_PT_joystick(bpy.types.Panel):
 classes.append(MYADDON_PT_joystick)
 #---------------------------------------------------
 
+
+#原点移動
+class MYADDON_PT_moveOrigin(bpy.types.Panel):
+    bl_space_type  = 'VIEW_3D'        #どのビューに表示するか
+    bl_region_type = 'UI'             #ビュー内のどこに入れるか。UIは右のサイドバーのとこ
+    bl_category    = AddonDisplayName #どのパネルカテゴリに所属するか。ツールパネルのタブに表示される名前。
+    bl_label       = "Operation"          #パネル内のグループのタイトル。
+
+    def draw(self, context):    #パネルレイアウトをここに記述する
+        layout = self.layout
+        layout.label(text="Move Origin")
+
+        layout.operator("myaddon.moveorg2sel", text = 'To Select')    #ボタン追加。textはボタンテキスト
+classes.append(MYADDON_PT_moveOrigin)
+#---------------------------------------------------
+
+
+
 #コンポジットセットアップ
 class MYADDON_PT_LineSetup(bpy.types.Panel):
     bl_space_type  = 'NODE_EDITOR'        #どのビューに表示するか
